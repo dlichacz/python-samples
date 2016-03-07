@@ -1,3 +1,7 @@
+suits = ['H', 'D', 'S', 'C']
+# Create dictionary of the values of each rank.  Issue of Ace being 11 will be dealt with later.
+values = {'A':1, '2':2, '3':3, '4':4, '5':5, '6':6, '7':7, '8':8, '9':9, '10':10, 'J':10, 'Q':10, 'K':10}
+
 class Player(object):
     
     def __init__(self, name, bank):
@@ -7,6 +11,15 @@ class Player(object):
     # Calculates new bank total after a win/loss.
     def new_bank(self, change):
         self.bank += change
+
+class Card(object):
+    
+    def __init__(self, rank, suit):
+        self.rank = rank
+        self.suit = suit
+        
+    def __str__(self):
+        return self.rank + self.suit
     
 name = input('What is your name? ')
 # Keep asking until a numeric bank value is entered.
