@@ -20,6 +20,32 @@ class Card(object):
         
     def __str__(self):
         return self.rank + self.suit
+
+
+class Hand(object):
+
+    def __init__(self):
+        # Set initial hand to be an empty list with a value of zero.
+        self.cards = []
+        self.value = 0
+        # Will change to true if an ace is added to the hand.
+        self.ace = False
+
+    def add_card(self, newcard):
+        self.cards.append(newcard)
+        if newcard.rank == 'A':
+            self.ace = True
+            
+    def calculate_value(self):
+        self.value = 0
+        for card in self.cards:
+            self.value += values[card.rank]
+        # If there is an ace in the hand and making it count as 11 does not bust the hand, make it 11.
+        if self.ace == True and (self.value + 10) <= 21:
+            self.value += 10
+            
+    def __str__(self):
+        return ' '.join(map(str, self.cards))
     
 name = input('What is your name? ')
 # Keep asking until a numeric bank value is entered.
