@@ -1,3 +1,5 @@
+from random import shuffle
+
 suits = ['H', 'D', 'S', 'C']
 # Create dictionary of the values of each rank.  Issue of Ace being 11 will be dealt with later.
 values = {'A':1, '2':2, '3':3, '4':4, '5':5, '6':6, '7':7, '8':8, '9':9, '10':10, 'J':10, 'Q':10, 'K':10}
@@ -46,6 +48,23 @@ class Hand(object):
             
     def __str__(self):
         return ' '.join(map(str, self.cards))
+
+class Deck(object):
+    
+    def __init__(self):
+        self.cards = []
+        for suit in suits:
+            for face in list(values.keys()):
+                self.cards.append(Card(face, suit))
+                
+    def shuffle_deck(self):
+        shuffle(self.cards)
+        
+    def deal_card(self):
+        return self.cards.pop(0)
+                     
+    def __str__(self):
+        return ' '.join(map(str, self.cards))
     
 name = input('What is your name? ')
 # Keep asking until a numeric bank value is entered.
@@ -82,3 +101,25 @@ while current_bet > player.bank or current_bet <= 0:
     current_bet = float(input('You currently have $' +
                               str('%.2f' %player.bank) +
                               ' in your bank. Please enter a positive value less than this amount: '))
+
+# Initialize the deck and shuffle.
+deck = Deck()
+deck.shuffle_deck()
+# Initialize hands for the dealer and player.
+dealer_hand = Hand()
+player_hand = Hand()
+# Deal the initial cards.
+player_hand.add_card(deck.deal_card())
+player_hand.add_card(deck.deal_card())
+dealer_hand.add_card(deck.deal_card())
+dealer_hand.add_card(deck.deal_card())
+
+print('')
+print("Let's play!")
+print('The dealer has dealt the cards.')
+print(player.name + ', your hand is', player_hand)
+print('The dealer is showing', dealer_hand.cards[1])
+player_hand.calculate_value()
+hit_stand = input('The current value of your hand is ' + str(player_hand.value) + '. Would you like to hit or stand? ').lower()
+
+
