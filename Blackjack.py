@@ -23,7 +23,6 @@ class Card(object):
     def __str__(self):
         return self.rank + self.suit
 
-
 class Hand(object):
 
     def __init__(self):
@@ -119,7 +118,44 @@ print("Let's play!")
 print('The dealer has dealt the cards.')
 print(player.name + ', your hand is', player_hand)
 print('The dealer is showing', dealer_hand.cards[1])
-player_hand.calculate_value()
-hit_stand = input('The current value of your hand is ' + str(player_hand.value) + '. Would you like to hit or stand? ').lower()
 
+# Play the game.
+while True:
+    # Test for blackjack.
+    player_hand.calculate_value()
+    dealer_hand.calculate_value()
+    if player_hand.value == 21:
+        print('You have blackjack!')
+        print("The dealer's hand is", dealer_hand)
+        if dealer_hand.value == 21:
+            print('The dealer also has blackjack. The game is a push.')
+        else:
+            print('You win!')
+            player.new_bank(1.5*current_bet)
+        print('Your current bank is $' + str('%.2f' %player.bank))
+        break       
 
+    # Player's turn.
+    while True:
+        hit_stand = input('The current value of your hand is ' + str(player_hand.value) + '. Enter h to hit or s to stand: ').lower()
+        # Keep asking until a correct option is entered.
+        while True:
+            if not hit_stand.startswith('h') and not hit_stand.startswith('s'):
+                hit_stand = input('That is not a valid option. Enter h to hit or s to stand: ').lower()
+                continue
+            else:
+                break
+        if hit_stand.startswith('h'):
+            player_hand.add_card(deck.deal_card())
+            print('You have been dealt the ' + str(player_hand.cards[-1]) + '. Your hand is now:', player_hand)
+        elif hit_stand.startswith('s'):
+            print('You have decided to stand on', str(player_hand.value) + '.')
+            break
+        player_hand.calculate_value()
+        if player_hand.value > 21:
+            print('The value of your hand is', str(player_hand.value) + '. You have busted!')
+            game_over = True
+            player.new_bank(-current_bet)
+            print(player.bank)
+            break
+    break
